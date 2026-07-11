@@ -71,13 +71,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 >
                   <div className="relative mx-auto w-full max-w-[1100px] py-8">
                     <div>{children}</div>
-                    {/* Mshairi: in top-to-bottom layout the controls stay aligned with the
-                        440px card instead of stretching to the 1100px container edge. */}
+                    {/* Mshairi: in top-to-bottom layout everything sits on the card's center
+                        axis (logo → card → powered by → controls), so the controls are
+                        centered too instead of hugging the container edge. */}
                     <div
                       className={
                         getThemeConfig().layout === "side-by-side"
                           ? "mx-auto flex max-w-[440px] flex-row items-center justify-end space-x-4 px-4 py-4 md:max-w-full md:px-8"
-                          : "mx-auto flex max-w-[440px] flex-row items-center justify-end space-x-4 px-4 py-4"
+                          : "mx-auto flex max-w-[440px] flex-row items-center justify-center space-x-4 px-4 py-4"
                       }
                     >
                       <LanguageSwitcher languages={languages} />
