@@ -21,6 +21,12 @@ export async function proxy(request: NextRequest) {
     requestHeaders.set("x-zitadel-i18n-organization", organization);
   }
 
+  // Mshairi: forward the auth request id so branding can resolve the per-app brand
+  const mshairiRequestId = request.nextUrl.searchParams.get("requestId");
+  if (mshairiRequestId) {
+    requestHeaders.set("x-mshairi-request-id", mshairiRequestId);
+  }
+
   // Internal infrastructure routes — skip middleware entirely.
   // /healthy and /ready are Kubernetes/Docker health probes that must respond
   // without depending on a ZITADEL backend.

@@ -1,11 +1,23 @@
 "use client";
 
 import { Logo } from "@/components/logo";
+import { mshairiExtras } from "@/lib/mshairi/extras";
 import { useResponsiveLayout } from "@/lib/theme-hooks";
 import { BrandingSettings } from "@zitadel/proto/zitadel/settings/v2/branding_settings_pb";
 import React, { Children, ReactNode } from "react";
 import { Card } from "./card";
 import { ThemeWrapper } from "./theme-wrapper";
+
+function MshairiFooter({ branding }: { branding?: BrandingSettings }) {
+  if (!mshairiExtras(branding).mshairiPoweredBy) {
+    return null;
+  }
+  return (
+    <p className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
+      powered by <span className="font-semibold">Mshairi</span>
+    </p>
+  );
+}
 
 /**
  * DynamicTheme component handles layout switching between traditional top-to-bottom
@@ -85,6 +97,7 @@ export function DynamicTheme({
                     </div>
                   </div>
                 </Card>
+                <MshairiFooter branding={branding} />
               </div>
             );
           })()
@@ -126,6 +139,7 @@ export function DynamicTheme({
                     <div className="flex flex-row justify-between"></div>
                   </div>
                 </Card>
+                <MshairiFooter branding={branding} />
               </div>
             );
           })()}

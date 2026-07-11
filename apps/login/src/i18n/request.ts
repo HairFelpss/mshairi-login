@@ -1,4 +1,5 @@
 import { LANGS, LANGUAGE_COOKIE_NAME, LANGUAGE_HEADER_NAME } from "@/lib/i18n";
+import { mshairiEnv } from "@/lib/mshairi/env";
 import { getServiceConfig } from "@/lib/service-url";
 import { getAllowedLanguages, getHostedLoginTranslation } from "@/lib/zitadel";
 import { JsonObject } from "@zitadel/client";
@@ -29,6 +30,12 @@ export default getRequestConfig(async () => {
     console.warn("Failed to load global settings", e);
   }
 
+  // Mshairi: force a deployment-level default language (e.g. "pt"), overriding
+  // the instance setting; user choices (cookie / ui_locales) still win below.
+  if (mshairiEnv.defaultLanguage) {
+    defaultLanguage = mshairiEnv.defaultLanguage;
+  }
+
   let locale: string = defaultLanguage;
 
   const languageHeader = await (await headers()).get(LANGUAGE_HEADER_NAME);
@@ -53,18 +60,23 @@ export default getRequestConfig(async () => {
   const i18nOrganization = _headers.get("x-zitadel-i18n-organization") || ""; // You may need to set this header in middleware
 
   let translations: JsonObject | Record<string, never> = {};
-  try {
-    const i18nJSON = await getHostedLoginTranslation({
-      serviceConfig,
-      locale,
-      organization: i18nOrganization,
-    });
+  // Mshairi: hosted translations fall back to Zitadel's ENGLISH system catalog
+  // for locales without a system file (e.g. pt) and would clobber the local
+  // locale files in the deepmerge below — opt out via env (see lib/mshairi/env.ts).
+  if (!mshairiEnv.ignoreHostedTranslations) {
+    try {
+      const i18nJSON = await getHostedLoginTranslation({
+        serviceConfig,
+        locale,
+        organization: i18nOrganization,
+      });
 
-    if (i18nJSON) {
-      translations = i18nJSON;
+      if (i18nJSON) {
+        translations = i18nJSON;
+      }
+    } catch (error) {
+      console.warn("Error fetching custom translations:", error);
     }
-  } catch (error) {
-    console.warn("Error fetching custom translations:", error);
   }
 
   const customMessages = translations;

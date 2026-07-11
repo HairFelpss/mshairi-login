@@ -36,6 +36,7 @@ import { getUserAgent } from "./fingerprint";
 import { applyCustomHeaders } from "@/lib/custom-headers";
 import { errorClassificationInterceptor, isClassifiedError } from "@/lib/grpc/interceptors/error-classification";
 import { otelGrpcInterceptor } from "@/lib/grpc/interceptors/otel";
+import { applyMshairiBrand } from "@/lib/mshairi/branding";
 import { Code, Interceptor } from "@connectrpc/connect";
 import { PromiseCache } from "./cache";
 import { createServiceForHost } from "./service";
@@ -145,11 +146,17 @@ export async function getBrandingSettings({
       .then((resp) => (resp.settings ? resp.settings : undefined));
   };
 
-  return freshCache(
+  const settings = await freshCache(
     instanceCacheKey(serviceConfig, `getBrandingSettings-${organization || "instance"}`),
     fetcher,
     getTTLForKey("getBrandingSettings", longCacheTTL),
   );
+
+  // Mshairi: per-app default branding; org label policy wins (see lib/mshairi/branding.ts)
+  return applyMshairiBrand({
+    settings,
+    fetchAuthRequest: (authRequestId) => getAuthRequest({ serviceConfig, authRequestId }),
+  });
 }
 
 export async function getLoginSettings({
