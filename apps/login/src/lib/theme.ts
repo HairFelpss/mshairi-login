@@ -143,11 +143,14 @@ export const APPEARANCE_STYLES = {
     background: "bg-background-light-400 dark:bg-background-dark-500", // Current system (shade 400)
   },
   glass: {
-    card: "backdrop-blur-md bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10 shadow-xl",
-    button:
-      "backdrop-blur-sm bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg hover:shadow-xl", // Glass effect for buttons
+    // Mshairi: frosted card over the brand aurora (see .mshairi-aurora in globals.scss).
+    // Strong blur + high-alpha white frost so content stays readable over the colored blobs.
+    card: "backdrop-blur-2xl bg-white/60 dark:bg-white/[0.07] border border-white/60 dark:border-white/10 shadow-2xl shadow-black/10 dark:shadow-black/50",
+    // No bg override here: the primary CTA keeps its solid brand color (it would
+    // conflict with bg-primary-light-500 and wash the button out).
+    button: "shadow-lg shadow-black/10 hover:shadow-xl",
     "idp-button":
-      "backdrop-blur-sm bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/20 shadow-lg hover:shadow-xl", // Glass effect for IDP buttons
+      "backdrop-blur-sm bg-white/40 dark:bg-white/10 border border-white/50 dark:border-white/15 shadow-md hover:shadow-lg",
     typography: "font-medium",
     background: "bg-transparent", // Transparent background to show blur effect
   },

@@ -74,3 +74,133 @@ html {
     background-position: -200% 0;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Mshairi glass appearance — brand aurora backdrop                    */
+/* Blobs read the per-brand primary shades injected by setTheme(), so  */
+/* the whole atmosphere recolors itself when the client_id brand flips.*/
+/* ------------------------------------------------------------------ */
+.mshairi-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mshairi-aurora__wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--theme-light-primary-50) 0%, transparent 55%);
+}
+
+.dark .mshairi-aurora__wash {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--theme-dark-primary-900) 35%, transparent) 0%, transparent 55%);
+}
+
+.mshairi-aurora__blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.55;
+  will-change: transform;
+}
+
+.mshairi-aurora__blob--1 {
+  width: 55vmax;
+  height: 55vmax;
+  top: -22vmax;
+  left: -14vmax;
+  background: radial-gradient(circle at 35% 35%, var(--theme-light-primary-200), transparent 65%);
+  animation: mshairi-drift-a 26s ease-in-out infinite alternate;
+}
+
+.mshairi-aurora__blob--2 {
+  width: 46vmax;
+  height: 46vmax;
+  bottom: -18vmax;
+  right: -12vmax;
+  background: radial-gradient(circle at 65% 65%, var(--theme-light-primary-300), transparent 65%);
+  animation: mshairi-drift-b 32s ease-in-out infinite alternate;
+}
+
+.mshairi-aurora__blob--3 {
+  width: 28vmax;
+  height: 28vmax;
+  top: 42%;
+  left: 56%;
+  opacity: 0.45;
+  background: radial-gradient(circle, var(--theme-light-primary-100), transparent 60%);
+  animation: mshairi-drift-c 38s ease-in-out infinite alternate;
+}
+
+.dark .mshairi-aurora__blob {
+  opacity: 0.28;
+}
+
+.dark .mshairi-aurora__blob--1 {
+  background: radial-gradient(circle at 35% 35%, var(--theme-dark-primary-600), transparent 65%);
+}
+
+.dark .mshairi-aurora__blob--2 {
+  background: radial-gradient(circle at 65% 65%, var(--theme-dark-primary-700), transparent 65%);
+}
+
+.dark .mshairi-aurora__blob--3 {
+  background: radial-gradient(circle, var(--theme-dark-primary-500), transparent 60%);
+}
+
+/* Faint concentric rings anchored under the card (echo of the arcs in the ref) */
+.mshairi-aurora__ring {
+  position: absolute;
+  left: 50%;
+  top: 60%;
+  width: 110vmin;
+  height: 110vmin;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  border: 1px solid var(--theme-light-primary-200);
+  opacity: 0.5;
+}
+
+.mshairi-aurora__ring--outer {
+  width: 150vmin;
+  height: 150vmin;
+  opacity: 0.3;
+}
+
+.dark .mshairi-aurora__ring {
+  border-color: var(--theme-dark-primary-800);
+}
+
+@keyframes mshairi-drift-a {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(6vmax, 4vmax, 0) scale(1.08);
+  }
+}
+
+@keyframes mshairi-drift-b {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(-5vmax, -3vmax, 0) scale(1);
+  }
+}
+
+@keyframes mshairi-drift-c {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-4vmax, 5vmax, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mshairi-aurora__blob {
+    animation: none;
+  }
+}
