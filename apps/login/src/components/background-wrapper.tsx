@@ -29,8 +29,6 @@ export function BackgroundWrapper({ children, className = "" }: { children: Reac
           <div className="mshairi-aurora__blob mshairi-aurora__blob--1" />
           <div className="mshairi-aurora__blob mshairi-aurora__blob--2" />
           <div className="mshairi-aurora__blob mshairi-aurora__blob--3" />
-          <div className="mshairi-aurora__ring" />
-          <div className="mshairi-aurora__ring mshairi-aurora__ring--outer" />
         </div>
       )}
       {children}

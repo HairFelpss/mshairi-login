@@ -30,20 +30,23 @@ export default getRequestConfig(async () => {
     console.warn("Failed to load global settings", e);
   }
 
-  // Mshairi: force a deployment-level default language (e.g. "pt"), overriding
-  // the instance setting; user choices (cookie / ui_locales) still win below.
+  // Mshairi: force the deployment language (e.g. "pt"). The browser's
+  // Accept-Language no longer decides — only an explicit choice in the
+  // language switcher (cookie, below) overrides it.
   if (mshairiEnv.defaultLanguage) {
     defaultLanguage = mshairiEnv.defaultLanguage;
   }
 
   let locale: string = defaultLanguage;
 
-  const languageHeader = await (await headers()).get(LANGUAGE_HEADER_NAME);
-  if (languageHeader) {
-    // splits "en-US,en;q=0.9" to ["en", "US"] or ["en"]
-    const headerLocale = languageHeader.split(",")[0].split("-")[0];
-    if (allowedLanguages.includes(headerLocale)) {
-      locale = headerLocale;
+  if (!mshairiEnv.defaultLanguage) {
+    const languageHeader = await (await headers()).get(LANGUAGE_HEADER_NAME);
+    if (languageHeader) {
+      // splits "en-US,en;q=0.9" to ["en", "US"] or ["en"]
+      const headerLocale = languageHeader.split(",")[0].split("-")[0];
+      if (allowedLanguages.includes(headerLocale)) {
+        locale = headerLocale;
+      }
     }
   }
 

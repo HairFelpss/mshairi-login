@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import ThemeSwitch from "@/components/theme-switch";
 import { LANGS, getLanguage } from "@/lib/i18n";
 import { getServiceConfig } from "@/lib/service-url";
+import { getThemeConfig } from "@/lib/theme";
 import { getAllowedLanguages } from "@/lib/zitadel";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import type { Metadata } from "next";
@@ -70,7 +71,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 >
                   <div className="relative mx-auto w-full max-w-[1100px] py-8">
                     <div>{children}</div>
-                    <div className="mx-auto flex max-w-[440px] flex-row items-center justify-end space-x-4 px-4 py-4 md:max-w-full md:px-8">
+                    {/* Mshairi: in top-to-bottom layout the controls stay aligned with the
+                        440px card instead of stretching to the 1100px container edge. */}
+                    <div
+                      className={
+                        getThemeConfig().layout === "side-by-side"
+                          ? "mx-auto flex max-w-[440px] flex-row items-center justify-end space-x-4 px-4 py-4 md:max-w-full md:px-8"
+                          : "mx-auto flex max-w-[440px] flex-row items-center justify-end space-x-4 px-4 py-4"
+                      }
+                    >
                       <LanguageSwitcher languages={languages} />
                       <ThemeSwitch />
                     </div>

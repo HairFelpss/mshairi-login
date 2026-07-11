@@ -26,7 +26,11 @@ const brandByClientIdSchema = z
 const envSchema = z.object({
   /** JSON map { [oidcClientId]: brandKey }; unmapped clients get the default brand. */
   LOGIN_BRAND_BY_CLIENT_ID: brandByClientIdSchema.optional(),
-  /** Deployment-level default language (overrides the instance setting; user choice still wins). */
+  /**
+   * Deployment language (e.g. "pt"). Overrides the instance setting AND the
+   * browser Accept-Language; only an explicit pick in the language switcher
+   * (NEXT_LOCALE cookie) wins over it.
+   */
   MSHAIRI_DEFAULT_LANGUAGE: z.enum(LOCALE_CODES).optional(),
   /**
    * Skip the instance/org hosted-login translations from the API. Zitadel Cloud

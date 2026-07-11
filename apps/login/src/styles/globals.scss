@@ -149,29 +149,6 @@ html {
   background: radial-gradient(circle, var(--theme-dark-primary-500), transparent 60%);
 }
 
-/* Faint concentric rings anchored under the card (echo of the arcs in the ref) */
-.mshairi-aurora__ring {
-  position: absolute;
-  left: 50%;
-  top: 60%;
-  width: 110vmin;
-  height: 110vmin;
-  transform: translate(-50%, -50%);
-  border-radius: 9999px;
-  border: 1px solid var(--theme-light-primary-200);
-  opacity: 0.5;
-}
-
-.mshairi-aurora__ring--outer {
-  width: 150vmin;
-  height: 150vmin;
-  opacity: 0.3;
-}
-
-.dark .mshairi-aurora__ring {
-  border-color: var(--theme-dark-primary-800);
-}
-
 @keyframes mshairi-drift-a {
   from {
     transform: translate3d(0, 0, 0) scale(1);
