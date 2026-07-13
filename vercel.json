@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "pnpm install --frozen-lockfile --filter @zitadel/login...",
+  "buildCommand": "NX_DAEMON=false NX_DISABLE_DB=true pnpm nx run @zitadel/login:build-vercel",
+  "outputDirectory": "apps/login/.next",
+  "github": { "silent": true }
+}
