@@ -152,7 +152,10 @@
       "failedPrecondition": "Failed precondition",
       "sessionNotValid": "Session is not valid",
       "passwordVerificationMissing": "Password verification is missing.",
-      "passwordVerificationTooOld": "Password verification is too old. Please verify your password again."
+      "passwordVerificationTooOld": "Password verification is too old. Please verify your password again.",
+      "codeNotFound": "This code is no longer valid — it may have already been used, or a newer code was requested. Request a new one below.",
+      "codeExpired": "This code has expired. Request a new one below.",
+      "codeInvalid": "This code is not correct. Check the code in your email, or request a new one below."
     }
   },
   "idp": {
