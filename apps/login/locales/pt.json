@@ -152,7 +152,10 @@
       "failedPrecondition": "Pré-condição falhou",
       "sessionNotValid": "A sessão não é válida",
       "passwordVerificationMissing": "A verificação de senha está ausente.",
-      "passwordVerificationTooOld": "A verificação de senha expirou. Por favor, verifique sua senha novamente."
+      "passwordVerificationTooOld": "A verificação de senha expirou. Por favor, verifique sua senha novamente.",
+      "codeNotFound": "Este código não é mais válido — ele pode já ter sido usado, ou um código mais novo foi solicitado. Solicite um novo abaixo.",
+      "codeExpired": "Este código expirou. Solicite um novo abaixo.",
+      "codeInvalid": "Este código não está correto. Confira o código no seu e-mail ou solicite um novo abaixo."
     }
   },
   "idp": {

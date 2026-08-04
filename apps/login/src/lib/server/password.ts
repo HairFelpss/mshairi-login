@@ -36,6 +36,27 @@ import { getPublicHostWithProtocol } from "./host";
 
 const logger = createLogger("password");
 
+/**
+ * A rejected password code comes back as a raw gRPC message — "Code not found (COMMAND-2M9fs)" —
+ * which `setUserPassword` forwards verbatim and the form renders straight to the person trying to
+ * recover their account. The embedded error IDs are stable API surface (the localized text is not),
+ * so match on the ID, show a sentence that says what to DO, and keep the original for the logs.
+ */
+const CODE_ERROR_KEYS = {
+  // The user aggregate holds no pending password code: already consumed by a successful reset, or
+  // this is not the user the code was mailed to.
+  "COMMAND-2M9fs": "errors.codeNotFound",
+  // The code exists but its expiry window has passed.
+  "CODE-QvUQ4P": "errors.codeExpired",
+  // The code does not match the stored one.
+  "CODE-woT0xc": "errors.codeInvalid",
+} as const;
+
+const humanizeCodeError = (raw: string, t: (key: string) => string): string => {
+  const id = Object.keys(CODE_ERROR_KEYS).find((errorId) => raw.includes(errorId));
+  return id ? t(CODE_ERROR_KEYS[id as keyof typeof CODE_ERROR_KEYS]) : t("set.errors.couldNotSetPassword");
+};
+
 type ResetPasswordCommand = {
   loginName: string;
   organization?: string;
@@ -486,7 +507,28 @@ export async function changePassword(command: { code?: string; userId: string; p
     }
   }
 
-  return setUserPassword({ serviceConfig, userId, password: command.password, code: command.code });
+  const result = await setUserPassword({
+    serviceConfig,
+    userId,
+    password: command.password,
+    code: command.code,
+  }).catch((error: unknown) => {
+    // `setUserPassword` folds only FailedPrecondition into a result; a mistyped code is classified
+    // InvalidArgument and rethrown, so it used to reach the form's generic catch. That is the most
+    // likely failure a real person hits, so map it here too. Unclassified errors still propagate —
+    // those are bugs, not user mistakes.
+    if (isClassifiedError(error) && error.code === Code.InvalidArgument && error.message) {
+      return { error: error.message };
+    }
+    throw error;
+  });
+
+  if (result && "error" in result && typeof result.error === "string") {
+    logger.warn("Set password rejected by the API", { userId, reason: result.error });
+    return { error: humanizeCodeError(result.error, t) };
+  }
+
+  return result;
 }
 
 type CheckSessionAndSetPasswordCommand = {
